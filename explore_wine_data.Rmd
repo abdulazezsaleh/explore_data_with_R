@@ -1,0 +1,470 @@
+Explore and Summarize white win quality by abdulazez alsulaiman 
+========================================================
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
+```
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, packages}
+
+library(ggplot2)
+library(knitr)
+library(dplyr)
+library(corrplot)
+
+```
+
+```{r echo=FALSE, Load_the_Data}
+# Load the Data
+data <- read.csv("wineQualityWhites.csv", header=TRUE, sep=",")
+
+```
+this dataset of white win quality, it has 4898 columns,
+what is intesesting about it is varias compenation in a qlass of win,
+in this report i am going to explore this data and decover wondufel things.
+
+
+```{r echo=FALSE, discover_the_Data}
+# discover the data 
+str(data)
+summary(data)
+```
+```{r echo=FALSE, clean_the_data}
+# Delet the first column because its usles and make noise in the data 
+data$X <- NULL
+str(data)
+```
+# Univariate Plots Section
+
+```{r echo=FALSE, build_one_function}
+# build function for one variable plot to avoid defulction in code 
+plot_one_variable <- function(xa , m , xl){
+plot <-ggplot(data,aes(x = xa ))+ geom_histogram ()+labs(title=m, x=xl)
+return(plot) 
+}
+
+```
+
+```{r echo=FALSE, Univariate_Plots1}
+#call the one variable plot for all columns in the data 
+plot_one_variable(data$fixed.acidity , "histogram for fixed.acidity" ,
+                  "fixed acidity (tartaric acid - g / dm^3)")
+
+```
+as we can see in the apove graph the data is normaly distributed between 5 to 9
+ 
+
+```{r echo=FALSE, Univariate_Plots2}
+#call the one variable plot for all columns in the data 
+
+plot_one_variable(data$volatile.acidity , "histogram for volatile.acidity" ,
+                  "volatile acidity (acetic acid - g / dm^3)")
+
+```
+
+ 
+as we can see in the apove graph the most tested data have low volatile acidity 
+ 
+```{r echo=FALSE, Univariate_Plots3}
+#call the one variable plot for all columns in the data 
+
+plot_one_variable(data$citric.acid, "histogram for citric.acid" ,
+                  "citric acid (g / dm^3)")
+
+```
+
+
+as we can see in the apove graph the data is normaly distributed between 0 to 0.5
+
+```{r echo=FALSE, Univariate_Plots4}
+#call the one variable plot for all columns in the data 
+
+plot_one_variable(data$residual.sugar , "histogram for residual.sugar" , 
+                  "residual sugar (g / dm^3)")
+
+
+```
+
+as we can see in the apove graph
+most of tested data have residual sugar from 4 to 8
+
+```{r echo=FALSE, Univariate_Plots5}
+#call the one variable plot for all columns in the data 
+
+plot_one_variable(data$free.sulfur.dioxide ,
+                  "histogram for  free.sulfur.dioxide" ,
+                  " free sulfur dioxide (mg / dm^3)")
+
+
+```
+
+as we can see in the apove graphthe free sulfur dioxide is normaly distributed
+
+```{r echo=FALSE, Univariate_Plots6}
+#call the one variable plot for all columns in the data 
+
+plot_one_variable(data$chlorides , "histogram for chlorides" ,
+                  "chlorides (sodium chloride - g / dm^3)")
+
+
+```
+
+as shown in the graph 6 the most data have chlorides between 0 to 0.1
+
+```{r echo=FALSE, Univariate_Plots7}
+#call the one variable plot for all columns in the data 
+
+plot_one_variable(data$total.sulfur.dioxide ,
+                  "histogram for total.sulfur.dioxide" ,
+                  "total sulfur dioxide (mg / dm^3)")
+
+```
+
+
+as shown in the apove graph the total sulfur dioxide is normaly distributed
+
+
+```{r echo=FALSE, Univariate_Plots8}
+#call the one variable plot for all columns in the data 
+
+plot_one_variable(data$density , "histogram for density" , "density (g / cm^3)")
+
+```
+
+
+as we can see in the apove graph the most data have density lower than 1
+
+```{r echo=FALSE, Univariate_Plots9}
+#call the one variable plot for all columns in the data 
+
+plot_one_variable(data$pH , "histogram for pH" , "pH")
+
+```
+
+as we can see in the apove graph the pH data is normaly distributed
+
+```{r echo=FALSE, Univariate_Plots10}
+#call the one variable plot for all columns in the data 
+
+plot_one_variable(data$sulphates , "histogram for sulphates" ,
+                  "sulphates (potassium sulphate - g / dm3)")
+
+```
+
+as we can see in the apove graph 
+the most data have sulphates between 0.3 and 0.6
+
+```{r echo=FALSE, Univariate_Plots11}
+#call the one variable plot for all columns in the data 
+
+plot_one_variable(data$alcohol , "histogram for alcohol" ,
+                  "alcohol (% by volume)")
+
+```
+
+as we can see in the apove graph 
+there is few data have higher alcohol percentage 
+
+```{r echo=FALSE, Univariate_Plots12}
+#call the one variable plot for all columns in the data 
+
+plot_one_variable(data$quality , "histogram for quality" ,
+                  "quality (score between 0 and 10)")
+
+```
+
+
+as shown in the apove graphmost
+most common quality in tha data is 6, over 2000 samples have it.
+
+
+
+
+
+
+
+# Univariate Analysis
+
+
+### What is the structure of your dataset?
+there is 13 variables in my dataset and 4898 rwos 
+
+### What is/are the main feature(s) of interest in your dataset?
+1- quality , 2-pH , 3-alcohol , 4-density , 5-residual.sugar
+
+### What other features in the dataset do you think will help support your \
+investigation into your feature(s) of interest?
+
+i think thes features is ok for me 
+### Did you create any new variables from existing variables in the dataset?
+no i did not 
+### Of the features you investigated, were there any unusual distributions? \
+Did you perform any operations on the data to tidy, adjust, or change the form \
+of the data? If so, why did you do this?
+
+i delet column X becuase it makes noise in the data and its useless 
+
+# Bivariate Plots Section
+
+
+
+```{r echo=FALSE, Bivariate_Plots1}
+#plot matrix correlation to see the correlation
+#between the variables in the data 
+core <-cor(data)
+corrplot(core, method='number'  , mar=c(0,0,1,0),
+         title="matrix correlation for all the features in numbers")
+
+```
+
+the apove graph shows the matrix correlation for all the features in numbers
+
+
+```{r echo=FALSE, Bivariate_Plots2}
+#plot matrix correlation to see the correlation
+#between the variables in the data 
+corrplot(core, method='square',mar=c(0,0,1,0),
+         title="matrix correlation for all the features in square") 
+
+```
+
+the apove graph shows the matrix correlation for all the features in squares
+
+
+```{r echo=FALSE, build_two_function}
+#build function for two variables plot to avoid defluction in code 
+two_variables_plot<-function(x_axis , y_axis ,m ,xl , yl){
+plot<-ggplot(data, aes(x=x_axis, y= y_axis )) + geom_point() + 
+geom_smooth(method="auto", se=TRUE, fullrange=FALSE, level=0.95) + 
+labs(title=m ,x=xl ,y = yl)
+return(plot)
+}
+
+```
+
+```{r echo=FALSE, Bivariate_Plots3}
+#call the two variables to see the relationships between diffirent variables 
+two_variables_plot(data$density , data$residual.sugar,
+                   "the correlation between density and residual.sugar " ,
+                   "density (g / cm^3) ", "residual sugar (g / dm^3) ")
+
+
+```
+
+in the apove graph we can see the the relationship
+between density and residual sugar 
+
+```{r echo=FALSE, Bivariate_Plots4}
+#call the two variables to see the relationships between diffirent variables 
+
+two_variables_plot(data$alcohol , data$density ,
+                   "the correlation between alcohol and density " ,
+                   "alcohol (% by volume) ", "density (g / cm^3)")
+
+```
+
+in the apove graph we can see the relationship between alcohol and density 
+
+
+```{r echo=FALSE, Bivariate_Plots5}
+#call the two variables to see the relationships between diffirent variables 
+
+two_variables_plot(data$free.sulfur.dioxide,data$residual.sugar,
+                   "the correlation between free.sulfur.dioxide
+                   and residual.sugar","free sulfur dioxide (mg / dm^3)",
+                   "total sulfur dioxide (mg / dm^3) ")
+
+
+```
+
+
+
+in the apove graph we can see the relationship between free sulfur dioxide
+and residual.sugar
+
+
+```{r echo=FALSE, Bivariate_Plots6}
+#call the two variables to see the relationships between diffirent variables 
+
+two_variables_plot(data$fixed.acidity , data$pH ,
+                   "the correlation between fixed.acidity and pH " ,
+                   "fixed acidity (tartaric acid - g / dm^3) ", "pH")
+
+```
+
+in the apove graph we can see the relationship between fixed acidity and pH 
+
+
+
+# Bivariate Analysis
+
+### Talk about some of the relationships you observed in this part of the \
+investigation. How did the feature(s) of interest vary with other features in \
+the dataset?
+
+i see some positive correlation and negitive correlation .
+### Did you observe any interesting relationships between the other features \
+(not the main feature(s) of interest)?
+no because it will be useless 
+### What was the strongest relationship you found?
+relationship between density and residual.sugar 
+
+
+
+# Multi variate Plots Section
+
+
+```{r echo=FALSE, Multivariate_Plots1}
+#plot the relationships between two variables and the therd is quality 
+
+ggplot(aes(x = alcohol, y = density ), data = data) +
+  geom_point(aes(color = factor(quality))) +
+  scale_colour_brewer()+
+  ggtitle("relationship between density and dalcohol and qulaity ")+
+labs (x="alcohol (% by volume)" ,y ="density (g / cm^3)") 
+
+
+
+
+
+```
+
+
+in the apove graph we can see the relationship
+between alcohol, density and quality 
+
+
+```{r echo=FALSE, Multivariate_Plots2}
+#plot the relationships between two variables and the therd is quality 
+
+
+
+ggplot(aes(x=density, y= residual.sugar  ), data = data) +
+  geom_point(aes(color = factor(quality))) +
+  scale_colour_brewer()+
+  ggtitle("relationship between density and residual.sugar and qulaity ")+
+labs (x="residual sugar (g / dm^3)" ,y ="density (g / cm^3)")
+
+
+
+
+
+```
+
+
+in the apove graph we can see the the relationship
+between density , residual sugar and quality 
+
+```{r echo=FALSE, Multivariate_Plots3}
+#plot the relationships between two variables and the therd is quality 
+
+
+ggplot(aes(x= free.sulfur.dioxide, y= total.sulfur.dioxide  ), data = data) +
+  geom_point(aes(color = factor(quality))) +
+  scale_colour_brewer()+
+  ggtitle("relationship between free.sulfur.dioxide 
+          and total.sulfur.dioxide and qulaity ")+
+labs (x="free sulfur dioxide (mg / dm^3)" , 
+      y ="total sulfur dioxide (mg / dm^3)")
+
+
+
+```
+
+in the apove graph we can see relationship 
+between free.sulfur.dioxide and total.sulfur.dioxide and qulaity 
+
+```{r echo=FALSE, Multivariate_Plots4}
+#plot the relationships between two variables and the therd is quality 
+
+
+ggplot(aes(x=fixed.acidity, y=pH ), data = data) +
+  geom_point(aes(color = factor(quality))) +
+  scale_colour_brewer()+
+  ggtitle("relationship between fixed.acidity and pH and qulaity ")+
+labs (x="fixed acidity (tartaric acid - g / dm^3)" , 
+      y ="pH")
+
+
+
+
+
+```
+in the apove graph we can see the relationship
+between fixed acidity , pH and quality 
+
+
+
+# multi varaible Analysis
+
+### Talk about some of the relationships you observed in this part of the \
+investigation. Were there features that strengthened each other in terms of \
+looking at your feature(s) of interest?
+
+i see the density has influnce in the data and has strong relationship with 
+other features 
+### Were there any interesting or surprising interactions between features?
+ther qulaity increase when alcohol increase that is intersting 
+
+
+
+
+# Final Plots and Summary
+
+
+
+### Plot One
+```{r echo=FALSE, Plot_One}
+plot_one_variable(data$pH , "histogram for pH" , "pH")
+
+```
+
+### Description One
+as we can see in the apove graph the data in pH is noramily distrebuted 
+
+
+### Plot Two
+```{r echo=FALSE, Plot_Two}
+two_variables_plot(data$fixed.acidity , data$pH ,
+                   "the correlation between fixed.acidity and pH " ,
+                   "fixed acidity (tartaric acid - g / dm^3) ", "pH")
+```
+
+### Description Two
+as we can see thwe apove graph when the fixed.acidity is low the pH is higer 
+### Plot Three
+```{r echo=FALSE, Plot_Three}
+
+
+ggplot(aes(x = alcohol, y = density ), data = data) +
+  geom_point(aes(color = factor(quality))) +
+  scale_colour_brewer()+
+  ggtitle("relationship between density and dalcohol and qulaity ")+
+labs (x="alcohol (% by volume)" ,y ="density (g / cm^3)") 
+
+
+```
+
+
+
+### Description Three
+as we can see in the apove graph that if
+the alcohol is higer and the densety is lower then the qulaity will be better 
+------
+
+# Reflection
+struggles :
+1- i don`t drink win and never see one , so it was not make sense 
+2-the quality of the data is good but i had to make some chamges 
+
+summary:
+1-there is many positive and negative correlation between the data 
+2- the most influnce factor in this data is density 
+3-the most uninfunce factor is sulphates 
+
+
+future work :
+
+most of the tested win their qulaity is 6 and few 8 ,
+it should be equal size of all diffirent qulaity level, 
+so as a future idea, i think we need to collect more data with other qualities
+
